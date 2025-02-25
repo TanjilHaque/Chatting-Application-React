@@ -86,3 +86,29 @@
   cursor: pointer;
 }
 
+.googleDiv{
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.googleDiv:hover{
+  background-color: #5F35F5;
+}
+
+.googleSpan{
+  transition: 0.3s ease-in-out;
+}
+
+.googleDiv:hover .googleSpan{
+  color: white;
+}
+
+.showError{
+  color: red;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.hideError{
+  display: none;
+}
+

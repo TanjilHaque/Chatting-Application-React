@@ -12,9 +12,9 @@ const Login = () => {
                         <h1 className='font-nunito font-bold text-[34.4px] text-[#11175D] mb-[30px]'>
                             Login to your account!
                         </h1>
-                        <div className='py-[22px] w-[220px] border flex gap-[10px] justify-center items-center rounded-[9px]'>
+                        <div className='py-[22px] w-[220px] border flex gap-[10px] justify-center items-center rounded-[9px] googleDiv'>
                             <img src="./src/Images/RegistrationImages/google.png" alt="google" />
-                            <span className='font-open text-[13.3px] text-[#03014C] font-semibold'>Login with Google</span>
+                            <span className='font-open text-[13.3px] text-[#03014C] font-semibold googleSpan'>Login with Google</span>
                         </div>
                     </div>
                     <InputFieldReg title={"Email Address"} type={"text"} loginClass={"login"}></InputFieldReg>

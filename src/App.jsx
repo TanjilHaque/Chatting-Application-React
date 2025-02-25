@@ -6,7 +6,7 @@ const App = () => {
   return (
     <div>
       <Registration></Registration>
-      <Login></Login>
+
     </div>
   )
 }
