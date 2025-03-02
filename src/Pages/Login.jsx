@@ -21,7 +21,7 @@ const Login = () => {
                     <InputFieldReg title={"Password"} type={"password"} loginClass={"login"}></InputFieldReg>
                     <Button title={"Login to Continue"} px={"px-[135px]"} py={"py-[20px]"} bRadius={"rounded-[8px]"}></Button>
                     <div className='font-open text-[13.3px] text-[#03014C] font-normal'>
-                        Already  have an account ? <span className='font-bold text-[#EA6C00]'><a href="#">Sign In</a></span>
+                        Don't have an account ? <span className='font-bold text-[#EA6C00]'><a href="#">Sign Up</a></span>
                     </div>
                 </div>
                 <div className='registrationImage h-screen flex justify-center items-center'>

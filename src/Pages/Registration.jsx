@@ -2,12 +2,22 @@ import React, { useState } from "react";
 import InputFieldReg from "../Components/InputFieldReg";
 import Button from "../Components/Button";
 import ChattingImage from "../Images/RegistrationImages/ChattingImage";
+import { toast, Slide } from "react-toastify";
+import { SyncLoader } from "react-spinners";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 
 const Registration = () => {
+  const auth = getAuth();
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e, field) => {
     if (field === "email") setEmail(e.target.value);
@@ -25,7 +35,44 @@ const Registration = () => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
-      alert("Form Submitted!"); // Replace with actual registration logic
+      console.log(email, fullName, password); // Replace with actual registration logic
+      setLoading(true);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userInfo) => {
+          updateProfile(auth.currentUser, {
+            displayName: fullName ? fullName : "Mike",
+            photoURL: "Some URl",
+          });
+        })
+        .then(() => {
+          toast(
+            `🎉 Congratulations ${fullName}, Your Registration is Complete!`,
+            {
+              position: "bottom-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Slide,
+            }
+          );
+          return sendEmailVerification(auth.currentUser);
+        })
+        .then((mailInfo) => {
+          console.log(`mail send by ${mailInfo}`);
+        })
+        .catch((err) => {
+          console.log(`Error from createUserWithEmailAndPassword is ${err}`);
+        })
+        .finally(() => {
+          setEmail("");
+          setFullName("");
+          setPassword("");
+          setLoading(false);
+        });
     }
   };
 
@@ -65,15 +112,29 @@ const Registration = () => {
             onChange={(e) => handleInputChange(e, "password")}
             error={errors.password}
           />
-          <Button
-            onClick={handleButton}
-            title={"Sign Up"}
-            px={"px-[135px]"}
-            py={"py-[20px]"}
-            bRadius={"rounded-[86px]"}
-          />
+          {loading ? (
+            <Button
+              title={<SyncLoader color="#fff" size={10} />}
+              px="px-[135px]"
+              py="py-[20px]"
+              bRadius="rounded-[86px]"
+              bg="bg-blue-500" // Optional: Ensure background color is visible
+            />
+          ) : (
+            <Button
+              onClick={handleButton}
+              title={"Sign Up"}
+              px={"px-[135px]"}
+              py={"py-[20px]"}
+              bRadius={"rounded-[86px]"}
+            />
+          )}
           <div className="font-open text-[13.3px] text-[#03014C] font-normal ml-[55px]">
-            Already have an account? <span className="font-bold text-[#EA6C00]"> <a href="#">Sign In</a> </span>
+            Already have an account?{" "}
+            <span className="font-bold text-[#EA6C00]">
+              {" "}
+              <a href="./Login.jsx">Sign In</a>{" "}
+            </span>
           </div>
         </div>
         <div className="registrationImage h-screen flex justify-center items-center">
