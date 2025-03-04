@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @import "tailwindcss";
 
-
 @theme {
-  --font-nunito: "Nunito", serif; 
+  --font-nunito: "Nunito", serif;
   --font-open: "Open Sans", serif;
 }
 
@@ -21,29 +20,29 @@
   font-family: "Nunito", serif;
   font-size: 20.64px;
   font-weight: 600;
-  color: #11175D;
+  color: #11175d;
   outline: none;
   transition: all 0.3s ease-in-out;
   background: white;
   background-clip: padding-box;
 }
 
-.login{
+.login {
   max-width: 368px;
   padding: 26px 50px;
-  border-bottom: 1px solid #03014C;
+  border-bottom: 1px solid #03014c;
   font-family: "Nunito", serif;
   font-size: 20.64px;
   font-weight: 600;
-  color: #11175D;
+  color: #11175d;
   outline: none;
   transition: all 0.3s ease-in-out;
   background: white;
   background-clip: padding-box;
 }
 
-.login:focus{
-  border-bottom: 2px solid #5F35F5;
+.login:focus {
+  border-bottom: 2px solid #5f35f5;
 }
 
 .inputField:focus {
@@ -65,8 +64,8 @@
   transition: all 0.3s ease-in-out;
 }
 
-.inputContainer .inputField:focus+.inputLabel,
-.inputContainer .inputField:valid +.inputLabel {
+.inputContainer .inputField:focus + .inputLabel,
+.inputContainer .inputField:valid + .inputLabel {
   top: 0;
   left: 30px;
   font-size: 14px;
@@ -74,41 +73,82 @@
   padding: 0 16px;
 }
 
-.login:focus+.inputLabel,
-.login:valid+.inputLabel{
+.login:focus + .inputLabel,
+.login:valid + .inputLabel {
   display: none;
 }
 
-.eyeToggle{
+.eyeToggle {
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
   cursor: pointer;
 }
 
-.googleDiv{
+.googleDiv {
   cursor: pointer;
   transition: 0.3s ease-in-out;
 }
-.googleDiv:hover{
-  background-color: #5F35F5;
+.googleDiv:hover {
+  background-color: #5f35f5;
 }
 
-.googleSpan{
+.googleSpan {
   transition: 0.3s ease-in-out;
 }
 
-.googleDiv:hover .googleSpan{
+.googleDiv:hover .googleSpan {
   color: white;
 }
 
-.showError{
+.showError {
   color: red;
   font-weight: 700;
   font-size: 14px;
 }
 
-.hideError{
+.hideError {
   display: none;
 }
 
+.backgroundChatting {
+  background-color: #03014c;
+}
+.navItem {
+  padding: 5px 15px;
+  background-color: white;
+  color: black;
+  border-radius: 45px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.navItem:hover {
+  background-color: black;
+  color: white;
+}
+
+.landingDisplayTitle {
+  color: white;
+  text-align: center;
+  font-weight: 500;
+  font-size: 60px;
+  overflow: hidden; /* Ensures the text is hidden initially */
+  white-space: nowrap; /* Prevents text from wrapping */
+  border-right: 4px solid white; /* The typwriter cursor */
+  animation: 
+    typing 2.5s steps(20, end) forwards,
+    blink-caret .6s step-end infinite;
+}
+
+/* The typing animation */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 20% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: white; }
+}

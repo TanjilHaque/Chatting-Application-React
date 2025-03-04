@@ -10,6 +10,7 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
+import { Link } from "react-router";
 
 const Registration = () => {
   const auth = getAuth();
@@ -133,7 +134,7 @@ const Registration = () => {
             Already have an account?{" "}
             <span className="font-bold text-[#EA6C00]">
               {" "}
-              <a href="./Login.jsx">Sign In</a>{" "}
+              <Link to="/login">Sign In</Link>
             </span>
           </div>
         </div>
