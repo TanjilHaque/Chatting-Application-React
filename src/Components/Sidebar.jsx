@@ -15,7 +15,7 @@ const Sidebar = () => {
     {
       id: 1,
       iconName: <SlHome />,
-      path: "/house",
+      path: "/home",
     },
     {
       id: 2,
@@ -40,13 +40,13 @@ const Sidebar = () => {
     <div>
       <div className="bg-[#5F35F5] w-[10vw] h-[90vh] rounded-3xl ml-[20px] mt-[20px]">
         <div className="avatar">
-          <div className="imageContainer flex justify-center items-center group ">
+          <div className="imageContainer flex justify-center items-center group relative">
             <img
-              className={`rounded-full w-[100px] h-[100px] mt-[38px] mb-[78px] cursor-pointer`}
+              className="rounded-full w-[100px] h-[100px] mt-[38px] mb-[78px] cursor-pointer"
               src="./src/images/RegistrationImages/avatar.png"
               alt="avatar"
             />
-            <span className="absolute hidden group-hover:block z-10 text-5xl text-white ">
+            <span className="cursor-pointer absolute opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-in-out z-10 text-5xl text-white">
               <IoCloudUploadOutline />
             </span>
           </div>

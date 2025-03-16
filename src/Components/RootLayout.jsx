@@ -8,7 +8,7 @@ const RootLayout = () => {
       <div>
         <Sidebar></Sidebar>
       </div>
-      <div className="w-full h-[90vh] bg-amber-300 rounded-3xl text-5xl font-bold mt-[20px] text-center">
+      <div className="w-full h-[90vh]">
         <Outlet></Outlet>
       </div>
     </div>

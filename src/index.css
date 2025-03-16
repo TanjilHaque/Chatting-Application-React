@@ -5,6 +5,7 @@
 @theme {
   --font-nunito: "Nunito", serif;
   --font-open: "Open Sans", serif;
+  --font-poppins: "Poppins", serif;
 }
 
 .inputContainer {
@@ -174,4 +175,18 @@
   top: 0;
   right: 0;
 
+}
+
+.groupsList{
+  position: relative;
+}
+
+.groupsList::after{
+  position: absolute;
+  content: '';
+  bottom: 15px;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background-color: #00000040;
 }

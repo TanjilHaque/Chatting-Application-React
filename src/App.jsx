@@ -8,6 +8,7 @@ import Layout from "./Layout";
 import Title from "./Pages/Title";
 import Sidebar from "./Components/Sidebar";
 import RootLayout from "./Components/RootLayout";
+import Home from "./Pages/Home";
 
 const App = () => {
   return (
@@ -21,8 +22,8 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
         </Route> */}
         <Route path="/" element={<RootLayout />}>
-          <Route index element={"This is home page"}></Route>
-          <Route path="/house" element={"This is home page"}></Route>
+          <Route index element={<Home />}></Route>
+          <Route path="/home" element={<Home />}></Route>
           <Route path="/message" element={"This is message page"}></Route>
           <Route path="/settings" element={"This is settings page"}></Route>
           <Route path="/notification" element={"This is notification page"}></Route>
