@@ -2,8 +2,8 @@ import React from "react";
 import HomeButtons from "./HomeButtons";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 
-const Friends = () => {
-  const friends = [
+const Group = () => {
+  const groups = [
     {
       id: 1,
       userName: "John Doe",
@@ -64,16 +64,16 @@ const Friends = () => {
     <div>
       <div className="rounded-[20px] shadow-2xl w-[427px] h-[347px] overflow-auto bg-white pt-[14px] pl-[20px] pr-[30px] pb-[20px]">
         <div className="flex justify-between items-center mb-[20px]">
-          <h2 className="font-poppins text-xl font-semibold">Friends</h2>
+          <h2 className="font-poppins text-xl font-semibold">Groups</h2>
           <span className="cursor-pointer text-xl">
             <HiOutlineDotsVertical />
           </span>
         </div>
-        {friends.map((item) => (
+        {groups.map((item) => (
           <div
             key={item.id}
             className={
-              item.id === friends.length
+              item.id === groups.length
                 ? `flex justify-between items-center pb-[28px]`
                 : `flex justify-between items-center groupsList pb-[28px]`
             }
@@ -103,4 +103,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default Group;

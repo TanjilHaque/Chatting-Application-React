@@ -1,62 +1,62 @@
 import React from "react";
-import HomeButtons from "./HomeButtons";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import HomeButtons from "./HomeButtons";
 
-const Friends = () => {
-  const friends = [
+const BlockList = () => {
+  const blockLists = [
     {
       id: 1,
-      userName: "John Doe",
+      userName: "Liam Smith",
       img: "https://randomuser.me/api/portraits/men/1.jpg",
-      lastText: "Hey, how have you been?",
+      lastDate: "2025-03-17T14:30:00Z",
     },
     {
       id: 2,
-      userName: "Jane Smith",
+      userName: "Olivia Brown",
       img: "https://randomuser.me/api/portraits/women/2.jpg",
-      lastText: "Are we still on for lunch tomorrow?",
+      lastDate: "2025-03-16T09:15:00Z",
     },
     {
       id: 3,
-      userName: "Michael Johnson",
+      userName: "Noah Johnson",
       img: "https://randomuser.me/api/portraits/men/3.jpg",
-      lastText: "Don’t forget to send the report.",
+      lastDate: "2025-03-15T18:45:00Z",
     },
     {
       id: 4,
-      userName: "Emily Davis",
+      userName: "Emma Williams",
       img: "https://randomuser.me/api/portraits/women/4.jpg",
-      lastText: "Had a great time at the event!",
+      lastDate: "2025-03-14T11:20:00Z",
     },
     {
       id: 5,
-      userName: "William Brown",
+      userName: "James Jones",
       img: "https://randomuser.me/api/portraits/men/5.jpg",
-      lastText: "Can you review my code?",
+      lastDate: "2025-03-13T16:00:00Z",
     },
     {
       id: 6,
-      userName: "Olivia Wilson",
+      userName: "Ava Garcia",
       img: "https://randomuser.me/api/portraits/women/6.jpg",
-      lastText: "Let’s catch up over coffee.",
+      lastDate: "2025-03-12T08:30:00Z",
     },
     {
       id: 7,
-      userName: "James Taylor",
+      userName: "William Martinez",
       img: "https://randomuser.me/api/portraits/men/7.jpg",
-      lastText: "Meeting has been rescheduled.",
+      lastDate: "2025-03-11T20:15:00Z",
     },
     {
       id: 8,
-      userName: "Sophia Martinez",
+      userName: "Sophia Rodriguez",
       img: "https://randomuser.me/api/portraits/women/8.jpg",
-      lastText: "Can you send me the presentation?",
+      lastDate: "2025-03-10T13:50:00Z",
     },
     {
       id: 9,
-      userName: "Liam Anderson",
+      userName: "Benjamin Davis",
       img: "https://randomuser.me/api/portraits/men/9.jpg",
-      lastText: "Happy Birthday! Have a great day!",
+      lastDate: "2025-03-09T17:25:00Z",
     },
   ];
 
@@ -64,16 +64,16 @@ const Friends = () => {
     <div>
       <div className="rounded-[20px] shadow-2xl w-[427px] h-[347px] overflow-auto bg-white pt-[14px] pl-[20px] pr-[30px] pb-[20px]">
         <div className="flex justify-between items-center mb-[20px]">
-          <h2 className="font-poppins text-xl font-semibold">Friends</h2>
+          <h2 className="font-poppins text-xl font-semibold">Block List</h2>
           <span className="cursor-pointer text-xl">
             <HiOutlineDotsVertical />
           </span>
         </div>
-        {friends.map((item) => (
+        {blockLists.map((item) => (
           <div
             key={item.id}
             className={
-              item.id === friends.length
+              item.id === blockLists.length
                 ? `flex justify-between items-center pb-[28px]`
                 : `flex justify-between items-center groupsList pb-[28px]`
             }
@@ -89,12 +89,14 @@ const Friends = () => {
                   {item.userName ? item.userName : "Chat Group"}
                 </h3>
                 <p className="font-poppins font-medium text-sm text-[#4D4D4DBF]">
-                  {item.lastText ? item.lastText : "Hi Guys, Wassup!"}
+                  {item.lastMessageDate
+                    ? item.lastMessageDate
+                    : "Hi Guys, Wassup!"}
                 </p>
               </div>
             </div>
             <div>
-              <p>Today</p>
+              <HomeButtons title="Unblock" />
             </div>
           </div>
         ))}
@@ -103,4 +105,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default BlockList;

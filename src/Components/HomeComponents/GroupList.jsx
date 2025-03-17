@@ -58,6 +58,12 @@ const GroupList = () => {
       lastText: "New project proposals are welcome.",
       groupImage: "https://picsum.photos/seed/iota/200/200",
     },
+    {
+      id: 10,
+      groupName: "Iota League",
+      lastText: "New project proposals are welcome.",
+      groupImage: "https://picsum.photos/seed/iota/200/200",
+    },
   ];
 
   return (
