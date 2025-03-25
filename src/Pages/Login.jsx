@@ -14,19 +14,24 @@ import {
 import { Link } from "react-router";
 
 const Login = () => {
+  // Initialize Firebase Authentication and Database
   const auth = getAuth();
   const database = getDatabase();
+
+  // State variables to manage form inputs and errors
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // Handle changes in input fields
   const handleInputChange = (e, field) => {
     if (field === "email") setEmail(e.target.value);
     if (field === "password") setPassword(e.target.value);
     setErrors((prev) => ({ ...prev, [field]: "" })); // Clear error when user types
   };
 
+  // Handle login with email and password
   const handleLogin = () => {
     let newErrors = {};
     if (!email.trim()) newErrors.email = "Email is required";
@@ -41,11 +46,6 @@ const Login = () => {
           toast.success(`🎉 Welcome back!`, {
             position: "bottom-center",
             autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
             theme: "light",
             transition: Slide,
           });
@@ -55,11 +55,6 @@ const Login = () => {
           toast.error("⚠️ Invalid email or password", {
             position: "bottom-center",
             autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
             theme: "light",
             transition: Slide,
           });
@@ -72,10 +67,12 @@ const Login = () => {
     }
   };
 
+  // Handle login with Google Authentication
   const loginWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((userInfo) => {
+        // Store user data in Firebase Realtime Database
         set(ref(database, "users"), {
           username: "ChatApp By React JS",
           email: "someEmail123@gmail.com",
@@ -84,18 +81,20 @@ const Login = () => {
         });
       })
       .catch((err) => {
-        console.log("error from signInWithPopup ,", err);
+        console.log("Error from signInWithPopup:", err);
       });
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="wrapper flex justify-between items-center gap-[300px]">
+        {/* Left Section - Login Form */}
         <div className="registrationBox flex flex-col gap-[55px] justify-between items-start">
           <div className="registerHeading">
             <h1 className="font-nunito font-bold text-[34.4px] text-[#11175D] mb-[30px]">
               Login to your account!
             </h1>
+            {/* Google Login Button */}
             <div className="py-[22px] w-[220px] border flex gap-[10px] justify-center items-center rounded-[9px] googleDiv">
               <img
                 src="./src/Images/RegistrationImages/google.png"
@@ -109,6 +108,7 @@ const Login = () => {
               </span>
             </div>
           </div>
+          {/* Email Input Field */}
           <InputFieldReg
             title={"Email Address"}
             type={"text"}
@@ -117,6 +117,7 @@ const Login = () => {
             onChange={(e) => handleInputChange(e, "email")}
             error={errors.email}
           />
+          {/* Password Input Field */}
           <InputFieldReg
             title={"Password"}
             type={"password"}
@@ -125,6 +126,7 @@ const Login = () => {
             onChange={(e) => handleInputChange(e, "password")}
             error={errors.password}
           />
+          {/* Login Button with Loading State */}
           {loading ? (
             <Button
               title={<SyncLoader color="#fff" size={10} />}
@@ -142,6 +144,7 @@ const Login = () => {
               bRadius={"rounded-[8px]"}
             />
           )}
+          {/* Registration Link */}
           <div className="font-open text-[13.3px] text-[#03014C] font-normal">
             Don't have an account ?{" "}
             <Link to={"/registration"} className="font-bold text-[#EA6C00]">
@@ -149,6 +152,7 @@ const Login = () => {
             </Link>
           </div>
         </div>
+        {/* Right Section - Illustration */}
         <div className="registrationImage h-screen flex justify-center items-center">
           <RegistrationImage />
         </div>

@@ -197,3 +197,18 @@
 }
 
 
+.parent {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 17px;
+  }
+  
+  .div1 { grid-area: 1 / 1 / 2 / 5; }
+  .div2 { grid-area: 2 / 1 / 7 / 5; }
+  .div3 { grid-area: 7 / 1 / 13 / 5; }
+  .div4 { grid-area: 1 / 5 / 7 / 9; }
+  .div5 { grid-area: 7 / 5 / 13 / 9; }
+  .div6 { grid-area: 1 / 9 / 7 / 13; }
+  .div7 { grid-area: 7 / 9 / 13 / 13; }

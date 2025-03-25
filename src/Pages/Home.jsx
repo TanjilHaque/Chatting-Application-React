@@ -9,23 +9,23 @@ import BlockList from "../Components/HomeComponents/BlockList";
 
 const Home = () => {
   return (
-    <div className="parent">
+    <div className="parent mt-[22px]">
       <div className="div1">
         <Searchbar />
       </div>
       <div className="div2">
         <GroupList />
       </div>
-      <div className="div3">
+      <div className="div4">
         <Friends />
       </div>
-      <div className="div4">
+      <div className="div6">
         <UserList />
       </div>
-      <div className="div5">
+      <div className="div3">
         <FriendRequest />
       </div>
-      <div className="div6">
+      <div className="div5">
         <Group />
       </div>
       <div className="div7">
