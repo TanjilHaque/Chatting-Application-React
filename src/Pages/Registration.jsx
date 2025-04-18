@@ -10,7 +10,10 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { getDatabase, push, ref, set } from "firebase/database";
+
+const db = getDatabase();
 
 const Registration = () => {
   // Initialize Firebase authentication
@@ -22,6 +25,8 @@ const Registration = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({}); // Stores validation errors
   const [loading, setLoading] = useState(false); // Loading state for button
+
+  const navigate = useNavigate();
 
   // Handles input changes and clears errors when the user types
   const handleInputChange = (e, field) => {
@@ -74,7 +79,15 @@ const Registration = () => {
           return sendEmailVerification(auth.currentUser); // Send email verification
         })
         .then((mailInfo) => {
+          let userRef = push(ref(db, "users/"))
+          set(userRef, {
+            username: auth.currentUser.displayName || fullName,
+            email: auth.currentUser.email || email,
+            profile_picture: `https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg`,
+            userUid: auth.currentUser.uid
+          });
           console.log(`Verification email sent: ${mailInfo}`);
+
         })
         .catch((err) => {
           console.error(`Error during registration: ${err.message}`);
@@ -151,7 +164,7 @@ const Registration = () => {
 
           {/* Navigation to Login Page */}
           <div className="font-open text-[13.3px] text-[#03014C] font-normal ml-[55px]">
-            Already have an account? {" "}
+            Already have an account?{" "}
             <span className="font-bold text-[#EA6C00]">
               <Link to="/login">Sign In</Link>
             </span>

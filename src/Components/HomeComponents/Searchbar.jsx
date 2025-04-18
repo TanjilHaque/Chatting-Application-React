@@ -5,7 +5,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 const Searchbar = () => {
   return (
     <div>
-      <div className="flex justify-between items-center cursor-pointer w-[100%] bg-white shadow-2xl px-[23px] py-[14.5px] rounded-[20px]">
+      <div className="flex justify-between items-center cursor-pointer w-[100%] bg-white shadow-xl px-[23px] py-[14.5px] rounded-[20px]">
         <div className="flex justify-center items-center gap-[36px]">
           <span className="text-[25px]">
             <CiSearch />

@@ -4,19 +4,21 @@ import InputFieldReg from "../Components/InputFieldReg";
 import Button from "../Components/Button";
 import { toast, Slide } from "react-toastify";
 import { SyncLoader } from "react-spinners";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, push } from "firebase/database";
 import {
   getAuth,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Login = () => {
   // Initialize Firebase Authentication and Database
   const auth = getAuth();
-  const database = getDatabase();
+  const db = getDatabase();
+
+  const navigate = useNavigate();
 
   // State variables to manage form inputs and errors
   const [email, setEmail] = useState("");
@@ -49,6 +51,7 @@ const Login = () => {
             theme: "light",
             transition: Slide,
           });
+          navigate("/home");
         })
         .catch((err) => {
           console.log(`Error from signInWithEmailAndPassword: ${err}`);
@@ -72,13 +75,17 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((userInfo) => {
+        const { user } = userInfo;
         // Store user data in Firebase Realtime Database
-        set(ref(database, "users"), {
-          username: "ChatApp By React JS",
-          email: "someEmail123@gmail.com",
-          profile_picture:
-            "https://lh3.googleusercontent.com/a/ACg8ocLZVXUzP_XmlNRvHQpPIJL4EJkF-O6v1VORACZcYX6JhQLOBQk=s96-c",
+        let userRef = push(ref(db, "users/"))
+        set(userRef, {
+          username: user.displayName || fullName,
+          email: user.email || email,
+          profile_picture: user.photoURL,
+          userUid: user.uid,
         });
+      }).then(()=>{
+        navigate('/')
       })
       .catch((err) => {
         console.log("Error from signInWithPopup:", err);

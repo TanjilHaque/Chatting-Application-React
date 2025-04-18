@@ -6,11 +6,18 @@ import { ImExit } from "react-icons/im";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { SlHome } from "react-icons/sl";
 import { Link, useLocation, useNavigate } from "react-router";
+import { getAuth, signOut } from "firebase/auth";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuClicked, setMenuClicked] = useState(false);
+  const auth = getAuth();
+
+  //handle icon function implement
+  const handleIcon = (path = '/')=>{
+    navigate(path);
+  }
 
   // Define sidebar menu items with associated icons and paths
   const menuIcons = [
@@ -80,6 +87,15 @@ const Sidebar = () => {
     document.body.appendChild(script);
   }, []);
 
+  // handle log out
+  const handleLogOut = ()=>{
+    signOut(auth).then(() => {
+      navigate('/login')
+    }).catch((error) => {
+      console.log("Error from Logout ",error)
+    });
+  }
+
   return (
     <div>
       {/* Sidebar Container */}
@@ -122,7 +138,7 @@ const Sidebar = () => {
 
         {/* Logout/Exit Icon at the Bottom */}
         <div className="exitIcon">
-          <div className="text-[46px] text-[#fff] flex justify-center items-end mt-[60px] cursor-pointer">
+          <div onClick={handleLogOut} className="text-[46px] text-[#fff] flex justify-center items-end mt-[60px] cursor-pointer">
             <ImExit />
           </div>
         </div>

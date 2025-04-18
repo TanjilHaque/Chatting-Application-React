@@ -9,6 +9,7 @@ import Title from "./Pages/Title";
 import Sidebar from "./Components/Sidebar";
 import RootLayout from "./Components/RootLayout";
 import Home from "./Pages/Home";
+import Settings from "./Pages/SettingsPage/Settings";
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
           <Route index element={<Home />}></Route>
           <Route path="/home" element={<Home />}></Route>
           <Route path="/message" element={"This is message page"}></Route>
-          <Route path="/settings" element={"This is settings page"}></Route>
+          <Route path="/settings" element={<Settings />}></Route>
           <Route path="/notification" element={"This is notification page"}></Route>
         </Route>
         <Route path="/login" element={<Login />} />
