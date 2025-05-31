@@ -1,103 +1,155 @@
-import React from "react";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import HomeButtons from "./HomeButtons";
+import React, { useEffect, useState } from "react";
+import { HiDotsVertical } from "react-icons/hi";
+import Avatar from "../../assets/homeAssets/avatar.gif";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  off,
+  push,
+  set,
+  remove,
+} from "firebase/database";
+import { getAuth } from "firebase/auth";
+import UserListSkeleton from "../../Skeletons/UserListSkeleton.jsx";
+import { toast } from "react-toastify";
+import moment from "moment";
 
 const FriendRequest = () => {
-  const friendRequests = [
-    {
-      id: 1,
-      userName: "Alice Johnson",
-      img: "https://randomuser.me/api/portraits/women/10.jpg",
-      lastText: "Hi, I would like to connect with you.",
-    },
-    {
-      id: 2,
-      userName: "Bob Smith",
-      img: "https://randomuser.me/api/portraits/men/11.jpg",
-      lastText: "Hey, let’s catch up sometime!",
-    },
-    {
-      id: 3,
-      userName: "Catherine Lee",
-      img: "https://randomuser.me/api/portraits/women/12.jpg",
-      lastText: "It would be great to collaborate on future projects.",
-    },
-    {
-      id: 4,
-      userName: "David Brown",
-      img: "https://randomuser.me/api/portraits/men/13.jpg",
-      lastText: "Looking forward to connecting with you.",
-    },
-    {
-      id: 5,
-      userName: "Eva Green",
-      img: "https://randomuser.me/api/portraits/women/14.jpg",
-      lastText: "Hi there, let’s be friends!",
-    },
-    {
-      id: 6,
-      userName: "Frank White",
-      img: "https://randomuser.me/api/portraits/men/15.jpg",
-      lastText: "I’d like to add you to my professional network.",
-    },
-    {
-      id: 7,
-      userName: "Grace Kim",
-      img: "https://randomuser.me/api/portraits/women/16.jpg",
-      lastText: "Can we connect?",
-    },
-    {
-      id: 8,
-      userName: "Henry Adams",
-      img: "https://randomuser.me/api/portraits/men/17.jpg",
-      lastText: "Let’s connect and share ideas.",
-    },
-    {
-      id: 9,
-      userName: "Isabella Martinez",
-      img: "https://randomuser.me/api/portraits/women/18.jpg",
-      lastText: "I’d love to connect with you.",
-    },
-  ];
+  const [requestList, setRequestList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const db = getDatabase();
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+
+  // Subscribe to incoming friend requests
+  useEffect(() => {
+    const requestRef = ref(db, "friendRequest/");
+    const fetchRequests = () => {
+      onValue(requestRef, (snapshot) => {
+        const list = [];
+        snapshot.forEach((item) => {
+          if (currentUser?.uid === item.val().receiver_id) {
+            list.push({ ...item.val(), FRKey: item.key });
+          }
+        });
+        setRequestList(list);
+        setLoading(false);
+      });
+    };
+  
+   fetchRequests();
+   return ()=> off(requestRef)
+  }, [currentUser, db]);
+  
+
+  // Accept a friend request
+  const handleAccept = (item = {}) => {
+    const now = moment().format();
+    const friendsRef = ref(db, "friends/");
+    const requestRef = ref(db, `friendRequest/${item.FRKey}`);
+    const notificationRef = ref(db, "notificaton/");
+
+    // 1) Add to friends
+    set(push(friendsRef), {
+      ...item,
+      createdAt: now,
+    })
+      // 2) Remove the friendRequest entry
+      .then(() => remove(requestRef))
+      // 3) Create a notification
+      .then(() =>
+        set(push(notificationRef), {
+          notificationMsg: `${item.sender_username} accepted your friend request`,
+          sender_profile_picture: item.sender_profile_picture || Avatar,
+          createdAt: now,
+        })
+      )
+      // 4) Show success toast
+      .then(() => {
+        toast.success(`${item.sender_username} added to your friends`);
+      })
+      .catch((err) => {
+        console.error("Error accepting friend request:", err);
+        toast.error("Could not accept request. Try again.");
+      });
+  };
+
+  // Reject a friend request
+  const handleReject = (item = {}) => {
+    if (!window.confirm("Are you sure you want to reject this request?")) {
+      return;
+    }
+    const requestRef = ref(db, `friendRequest/${item.FRKey}`);
+    remove(requestRef)
+      .then(() => toast.info("Friend request rejected"))
+      .catch((err) => {
+        console.error("Error rejecting friend request:", err);
+        toast.error("Could not reject request. Try again.");
+      });
+  };
 
   return (
-    <div>
-      <div className="rounded-[20px] shadow-2xl w-[100%] h-[347px] overflow-auto bg-white pt-[0] pl-[20px] pr-[30px] pb-[20px]">
-        <div className="flex justify-between items-center mb-[20px] sticky top-0 bg-white z-20 pt-3.5 pb-2">
-          <h2 className="font-poppins text-xl font-semibold">Friend Request</h2>
-          <span className="cursor-pointer text-xl">
-            <HiOutlineDotsVertical />
+    <div className="shadow-2xs mt-3">
+      <div className="flex items-center justify-between px-4 py-2">
+        <h1 className="relative font-bold text-lg">
+          Friend Requests
+          <span className="absolute -right-6 -top-1 w-5 h-5 text-xs rounded-full bg-green-300 text-black flex items-center justify-center">
+            {requestList.length}
           </span>
-        </div>
-        {friendRequests.map((item) => (
-          <div
-            key={item.id}
-            className={
-              item.id === friendRequests.length
-                ? `flex justify-between items-center pb-[28px]`
-                : `flex justify-between items-center groupsList pb-[28px]`
-            }
-          >
-            <div className="flex justify-center items-center gap-[14px]">
-              <img
-                src={item.img}
-                alt="img"
-                className="rounded-full w-[70px] h-[70px]"
-              />
-              <div>
-                <h3 className="font-poppins font-semibold text-lg">
-                  {item.userName ? item.userName : "Chat Group"}
-                </h3>
-                <p className="font-poppins font-medium text-sm text-[#4D4D4DBF]">
-                  {item.lastText ? item.lastText : "Hi Guys, Wassup!"}
+        </h1>
+        <HiDotsVertical />
+      </div>
+
+      <div className="overflow-y-scroll h-[38dvh] scrollable-content px-4 pb-4">
+        {loading ? (
+          <UserListSkeleton />
+        ) : requestList.length === 0 ? (
+          <p className="text-center text-gray-500 mt-5">No friend requests</p>
+        ) : (
+          requestList.map((item, idx) => (
+            <div
+              key={item.FRKey}
+              className={`flex items-center justify-between mt-3 ${
+                idx === requestList.length - 1 ? "" : "border-b border-gray-800 pb-2"
+              }`}
+            >
+              {/* Avatar */}
+              <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                <img
+                  src={item.sender_profile_picture || Avatar}
+                  alt="avatar"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+
+              {/* Username & Time */}
+              <div className="flex-1 px-3">
+                <h1 className="font-semibold">{item.sender_username}</h1>
+                <p className="text-sm text-gray-400">
+                  {moment(item.createdAt).fromNow()}
                 </p>
               </div>
+
+              {/* Actions */}
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={() => handleAccept(item)}
+                  className="text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-4 py-1.5"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => handleReject(item)}
+                  className="text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-4 py-1.5"
+                >
+                  Reject
+                </button>
+              </div>
             </div>
-            <div>
-              <HomeButtons title="Accept" />
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

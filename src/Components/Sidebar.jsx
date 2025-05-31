@@ -7,17 +7,21 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { SlHome } from "react-icons/sl";
 import { Link, useLocation, useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
+import { onValue, ref, getDatabase } from "firebase/database";
+import { update } from "firebase/database";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuClicked, setMenuClicked] = useState(false);
+  const [userData, setUserData] = useState([]);
   const auth = getAuth();
+  const db = getDatabase();
 
   //handle icon function implement
-  const handleIcon = (path = '/')=>{
+  const handleIcon = (path = "/") => {
     navigate(path);
-  }
+  };
 
   // Define sidebar menu items with associated icons and paths
   const menuIcons = [
@@ -74,7 +78,19 @@ const Sidebar = () => {
         if (error) {
           throw new Error("Failed to upload Profile Picture");
         }
-        console.log(result.info.secure_url); // Log uploaded image URL
+        console.log(result.info.secure_url);
+        const uploadedUrl = result.info.secure_url; // Log uploaded image URL
+
+        if (userData?.userKey) {
+          const userRef = ref(db, `users/${userData.userKey}`);
+          update(userRef, { profile_picture: uploadedUrl })
+            .then(() => {
+              console.log("Profile picture updated successfully.");
+            })
+            .catch((err) => {
+              console.error("Error updating profile picture: ", err);
+            });
+        }
       }
     );
   };
@@ -88,13 +104,36 @@ const Sidebar = () => {
   }, []);
 
   // handle log out
-  const handleLogOut = ()=>{
-    signOut(auth).then(() => {
-      navigate('/login')
-    }).catch((error) => {
-      console.log("Error from Logout ",error)
-    });
-  }
+  const handleLogOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log("Error from Logout ", error);
+      });
+  };
+
+  useEffect(() => {
+    const fetchData = () => {
+      const UserRef = ref(db, "users/");
+      let userBlankInfo = null;
+      onValue(UserRef, (snapshot) => {
+        snapshot.forEach((item) => {
+          if (auth.currentUser.uid === item.val().userUid) {
+            userBlankInfo = { ...item.val(), userKey: item.key };
+          }
+          // console.log("========================================");
+          // console.log(item.val());
+          // console.log("========================================");
+          setUserData(userBlankInfo);
+        });
+      });
+    };
+    fetchData();
+  }, []);
+
+
 
   return (
     <div>
@@ -105,7 +144,11 @@ const Sidebar = () => {
           <div className="imageContainer flex justify-center items-center group relative">
             <img
               className="rounded-full w-[100px] h-[100px] mt-[38px] mb-[78px] cursor-pointer"
-              src="./src/images/RegistrationImages/avatar.png"
+              src={
+                userData
+                  ? userData.profile_picture
+                  : "./src/images/RegistrationImages/avatar.png"
+              }
               alt="avatar"
             />
             {/* Upload Icon Appears on Hover */}
@@ -120,6 +163,9 @@ const Sidebar = () => {
 
         {/* Sidebar Navigation Icons */}
         <div className="icons text-[46px] flex flex-col justify-center items-center gap-[33px]">
+          <div>
+            <h1 className="text-2xl text-white">{userData? userData.username:"missing"}</h1>
+          </div>
           {menuIcons.map((item, index) => (
             <Link to={item.path} key={item.id}>
               <div
@@ -138,7 +184,10 @@ const Sidebar = () => {
 
         {/* Logout/Exit Icon at the Bottom */}
         <div className="exitIcon">
-          <div onClick={handleLogOut} className="text-[46px] text-[#fff] flex justify-center items-end mt-[60px] cursor-pointer">
+          <div
+            onClick={handleLogOut}
+            className="text-[46px] text-[#fff] flex justify-center items-end mt-[60px] cursor-pointer"
+          >
             <ImExit />
           </div>
         </div>

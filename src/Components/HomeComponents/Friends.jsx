@@ -1,104 +1,126 @@
-import React from "react";
-import HomeButtons from "./HomeButtons";
-import { HiOutlineDotsVertical } from "react-icons/hi";
+import React, { useEffect, useState } from "react";
+import { getDatabase, onValue, ref, remove } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { HiDotsVertical } from "react-icons/hi";
+import { useDispatch } from "react-redux";
+import { FriendAction } from "../../features/slices/friendSlice.js";
+import Avatar from '../../../src/assets/homeAssets/avatar.gif'
+import UserListSkeleton from "../../Skeletons/UserListSkeleton.jsx";
 
-const Friends = () => {
-  const friends = [
-    {
-      id: 1,
-      userName: "John Doe",
-      img: "https://randomuser.me/api/portraits/men/1.jpg",
-      lastText: "Hey, how have you been?",
-    },
-    {
-      id: 2,
-      userName: "Jane Smith",
-      img: "https://randomuser.me/api/portraits/women/2.jpg",
-      lastText: "Are we still on for lunch tomorrow?",
-    },
-    {
-      id: 3,
-      userName: "Michael Johnson",
-      img: "https://randomuser.me/api/portraits/men/3.jpg",
-      lastText: "Don’t forget to send the report.",
-    },
-    {
-      id: 4,
-      userName: "Emily Davis",
-      img: "https://randomuser.me/api/portraits/women/4.jpg",
-      lastText: "Had a great time at the event!",
-    },
-    {
-      id: 5,
-      userName: "William Brown",
-      img: "https://randomuser.me/api/portraits/men/5.jpg",
-      lastText: "Can you review my code?",
-    },
-    {
-      id: 6,
-      userName: "Olivia Wilson",
-      img: "https://randomuser.me/api/portraits/women/6.jpg",
-      lastText: "Let’s catch up over coffee.",
-    },
-    {
-      id: 7,
-      userName: "James Taylor",
-      img: "https://randomuser.me/api/portraits/men/7.jpg",
-      lastText: "Meeting has been rescheduled.",
-    },
-    {
-      id: 8,
-      userName: "Sophia Martinez",
-      img: "https://randomuser.me/api/portraits/women/8.jpg",
-      lastText: "Can you send me the presentation?",
-    },
-    {
-      id: 9,
-      userName: "Liam Anderson",
-      img: "https://randomuser.me/api/portraits/men/9.jpg",
-      lastText: "Happy Birthday! Have a great day!",
-    },
-  ];
+const Friends = ({ showButton = true }) => {
+  const [friendsList, setFriendsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const auth = getAuth();
+  const db = getDatabase();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const friendsRef = ref(db, "friends");
+
+    const unsubscribe = onValue(friendsRef, (snapshot) => {
+      const currentUserId = auth.currentUser?.uid;
+      const list = [];
+
+      snapshot.forEach((item) => {
+        const friend = item.val();
+
+        const isCurrentUserInvolved =
+          friend.sender_id === currentUserId ||
+          friend.receiver_id === currentUserId;
+
+        if (isCurrentUserInvolved) {
+          const isSender = friend.sender_id === currentUserId;
+
+          list.push({
+            key: item.key,
+            name: isSender ? friend.receiver_username : friend.sender_username,
+            email: isSender ? friend.receiver_email : friend.sender_email,
+            photo: isSender
+              ? friend.receiver_profile_picture
+              : friend.sender_profile_picture,
+            userUid: isSender ? friend.receiver_id : friend.sender_id,
+          });
+        }
+      });
+
+      setFriendsList(list);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleUnfriend = (key) => {
+    const confirmDelete = confirm("Are you sure you want to unfriend?");
+    if (!confirmDelete) return;
+
+    remove(ref(db, `friends/${key}`))
+      .then(() => {
+        alert("Unfriended successfully");
+      })
+      .catch((err) => {
+        console.error("Failed to unfriend:", err);
+        alert("Something went wrong while unfriending.");
+      });
+  };
+
+  const handleFriendInfo = (friend) => {
+    dispatch(
+      FriendAction({
+        userUid: friend.userUid,
+        userName: friend.name,
+        userEmail: friend.email,
+        userProfilePicture: friend.photo,
+      })
+    );
+  };
 
   return (
-    <div>
-      <div className="rounded-[20px] shadow-2xl w-[100%] h-[429px] overflow-auto bg-white pt-[0] pl-[20px] pr-[30px] pb-[20px]">
-        <div className="flex justify-between items-center mb-[20px] sticky top-0 bg-white z-20 pt-3.5 pb-2">
-          <h2 className="font-poppins text-xl font-semibold">Friends</h2>
-          <span className="cursor-pointer text-xl">
-            <HiOutlineDotsVertical />
-          </span>
-        </div>
-        {friends.map((item) => (
+    <div className="shadow-lg rounded-lg p-4 h-[48vh] overflow-y-auto bg-white dark:text-white">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-xl font-semibold text-black">Friends</h2>
+        <HiDotsVertical />
+      </div>
+
+      {loading ? (
+        <UserListSkeleton />
+      ) : friendsList.length === 0 ? (
+        <p className="text-gray-500 text-sm">No friends yet.</p>
+      ) : (
+        friendsList.map((friend) => (
           <div
-            key={item.id}
-            className={
-              item.id === friends.length
-                ? `flex justify-between items-center pb-[28px]`
-                : `flex justify-between items-center groupsList pb-[28px]`
-            }
+            key={friend.key}
+            onClick={() => handleFriendInfo(friend)}
+            className="flex items-center justify-between p-3 bg-white rounded-md shadow-sm mb-3 hover:bg-gray-50 cursor-pointer"
           >
-            <div className="flex justify-center items-center gap-[14px]">
+            <div className="flex items-center gap-4">
               <img
-                src={item.img}
-                alt="groupImage"
-                className="rounded-full w-[70px] h-[70px]"
+                src={friend.photo || Avatar}
+                alt={friend.name}
+                className="w-12 h-12 rounded-full object-cover"
               />
               <div>
-                <h3 className="font-poppins font-semibold text-lg">
-                  {item.userName ? item.userName : "Chat Group"}
-                </h3>
-                <p className="font-poppins font-medium text-sm text-[#4D4D4DBF]">
-                  {item.lastText ? item.lastText : "Hi Guys, Wassup!"}
+                <h3 className="font-semibold text-black">{friend.name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {friend.email}
                 </p>
               </div>
             </div>
-            <div>
-              <p>Today</p>
-            </div>
+            {showButton && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent triggering handleFriendInfo
+                  handleUnfriend(friend.key);
+                }}
+                className="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded text-sm font-medium transition"
+              >
+                Unfriend
+              </button>
+            )}
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 };

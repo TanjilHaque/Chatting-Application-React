@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ValidationError from "../Pages/ValidationError";
@@ -7,6 +7,7 @@ import ValidationError from "../Pages/ValidationError";
 const RootLayout = () => {
   const [isUserVerified, setIsUserVerified] = useState(false);
   const auth = getAuth();
+  const navigate = useNavigate();
   let content = null;
   useEffect(() => {
     onAuthStateChanged(auth,(user)=>{
