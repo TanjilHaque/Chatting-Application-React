@@ -1,64 +1,46 @@
 import React from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import HomeButtons from "./HomeButtons";
-
+import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { useState, useEffect } from "react";
 const BlockList = () => {
-  const blockLists = [
-    {
-      id: 1,
-      userName: "Liam Smith",
-      img: "https://randomuser.me/api/portraits/men/1.jpg",
-      lastDate: "2025-03-17T14:30:00Z",
-    },
-    {
-      id: 2,
-      userName: "Olivia Brown",
-      img: "https://randomuser.me/api/portraits/women/2.jpg",
-      lastDate: "2025-03-16T09:15:00Z",
-    },
-    {
-      id: 3,
-      userName: "Noah Johnson",
-      img: "https://randomuser.me/api/portraits/men/3.jpg",
-      lastDate: "2025-03-15T18:45:00Z",
-    },
-    {
-      id: 4,
-      userName: "Emma Williams",
-      img: "https://randomuser.me/api/portraits/women/4.jpg",
-      lastDate: "2025-03-14T11:20:00Z",
-    },
-    {
-      id: 5,
-      userName: "James Jones",
-      img: "https://randomuser.me/api/portraits/men/5.jpg",
-      lastDate: "2025-03-13T16:00:00Z",
-    },
-    {
-      id: 6,
-      userName: "Ava Garcia",
-      img: "https://randomuser.me/api/portraits/women/6.jpg",
-      lastDate: "2025-03-12T08:30:00Z",
-    },
-    {
-      id: 7,
-      userName: "William Martinez",
-      img: "https://randomuser.me/api/portraits/men/7.jpg",
-      lastDate: "2025-03-11T20:15:00Z",
-    },
-    {
-      id: 8,
-      userName: "Sophia Rodriguez",
-      img: "https://randomuser.me/api/portraits/women/8.jpg",
-      lastDate: "2025-03-10T13:50:00Z",
-    },
-    {
-      id: 9,
-      userName: "Benjamin Davis",
-      img: "https://randomuser.me/api/portraits/men/9.jpg",
-      lastDate: "2025-03-09T17:25:00Z",
-    },
-  ];
+  const [blockedUsers, setBlockedUsers] = useState([]);
+  const auth = getAuth();
+  const db = getDatabase();
+
+  const handleUnblock = (blockId) => {
+    const confirmUnblock = confirm("Do you want to unblock this user?");
+    if (!confirmUnblock) return;
+
+    remove(ref(db, `blocks/${blockId}`))
+      .then(() => {
+        alert("User unblocked successfully.");
+      })
+      .catch((err) => {
+        console.error("Failed to unblock:", err);
+        alert("Something went wrong while unblocking.");
+      });
+  };
+
+  useEffect(() => {
+    const blockRef = ref(db, "blocks");
+    const unsubscribe = onValue(blockRef, (snapshot) => {
+      const currentUserId = auth.currentUser?.uid;
+      const list = [];
+
+      snapshot.forEach((item) => {
+        const data = item.val();
+        if (data.blocker_id === currentUserId) {
+          list.push({ key: item.key, ...data });
+        }
+      });
+
+      setBlockedUsers(list);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div>
@@ -69,34 +51,37 @@ const BlockList = () => {
             <HiOutlineDotsVertical />
           </span>
         </div>
-        {blockLists.map((item) => (
+        {blockedUsers.map((item, index) => (
           <div
-            key={item.id}
+            key={item.key}
             className={
-              item.id === blockLists.length
+              index === blockedUsers.length - 1
                 ? `flex justify-between items-center pb-[28px]`
                 : `flex justify-between items-center groupsList pb-[28px]`
             }
           >
             <div className="flex justify-center items-center gap-[14px]">
               <img
-                src={item.img}
-                alt="groupImage"
+                src={item.blocked_photo || Avatar}
+                alt="Blocked User"
                 className="rounded-full w-[70px] h-[70px]"
               />
               <div>
                 <h3 className="font-poppins font-semibold text-lg">
-                  {item.userName ? item.userName : "Chat Group"}
+                  {item.blocked_name}
                 </h3>
                 <p className="font-poppins font-medium text-sm text-[#4D4D4DBF]">
-                  {item.lastMessageDate
-                    ? item.lastMessageDate
-                    : "Hi Guys, Wassup!"}
+                  {item.blocked_email}
                 </p>
               </div>
             </div>
             <div>
-              <HomeButtons title="Unblock" />
+              <button
+                onClick={() => handleUnblock(item.key)}
+                className="bg-blue-100 hover:bg-blue-200 text-blue-600 px-3 py-1 rounded text-sm font-medium transition"
+              >
+                Unblock
+              </button>
             </div>
           </div>
         ))}
