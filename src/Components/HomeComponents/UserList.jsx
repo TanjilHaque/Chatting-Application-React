@@ -204,7 +204,7 @@ const UserList = () => {
 
   return (
     <div className="rounded-[20px] shadow-2xl w-full h-[429px] overflow-auto bg-white pt-0 pl-[20px] pr-[30px] pb-[20px]">
-      <div className="flex justify-between items-center mb-[20px] sticky top-0 bg-white z-20 pt-3.5 pb-2">
+      <div className="flex justify-between items-center mb-[20px] sticky top-0 bg-white pt-3.5 pb-2">
         <h2 className="font-poppins text-xl font-semibold">User List</h2>
         <span className="cursor-pointer text-xl">
           <HiOutlineDotsVertical />
