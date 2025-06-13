@@ -1,3 +1,4 @@
+//Home.jsx
 import React from "react";
 import Searchbar from "../Components/HomeComponents/Searchbar";
 import GroupList from "../Components/HomeComponents/GroupList";

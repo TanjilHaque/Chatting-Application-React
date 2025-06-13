@@ -1,3 +1,5 @@
+//FriendRequest.jsx
+
 import React, { useEffect, useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import Avatar from "../../assets/homeAssets/avatar.gif";

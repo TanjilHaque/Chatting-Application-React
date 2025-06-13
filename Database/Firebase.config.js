@@ -1,4 +1,5 @@
 // Import the functions you need from the SDKs you need
+//Firebase.config.js
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {

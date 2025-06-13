@@ -1,3 +1,5 @@
+//Settings.jsx
+
 import React, { useState } from "react";
 import Searchbar from "../../Components/HomeComponents/Searchbar";
 import { PiPencilSimpleLineFill } from "react-icons/pi";

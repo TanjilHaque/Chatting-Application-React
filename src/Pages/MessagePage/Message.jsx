@@ -1,3 +1,4 @@
+//Message.jsx
 import React, { useEffect, useState } from "react";
 import { FaCamera, FaRegFaceSmileBeam, FaTelegram } from "react-icons/fa6";
 import EmojiPicker from "emoji-picker-react";

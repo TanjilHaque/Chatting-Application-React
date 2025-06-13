@@ -1,4 +1,7 @@
-const cloudinaryApi = import.meta.env.VITE_CLOUDINARY_API
+//cloudinary.utils.js
+
+const cloudinaryApi = import.meta.env.VITE_CLOUDINARY_API; // Correct!
+console.log("Cloudinary API URL:", cloudinaryApi); // Add this line
 
 export const uploadCloudinaryFile = async (formData) => {
     try {

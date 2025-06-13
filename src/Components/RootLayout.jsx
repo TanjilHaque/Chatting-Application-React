@@ -1,3 +1,4 @@
+//RootLayout.jsx
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";

@@ -1,3 +1,4 @@
+//HomeError.jsx
 const HomeError = ({ children }) => {
   return <div>{children}</div>;
 };

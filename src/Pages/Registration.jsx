@@ -1,3 +1,4 @@
+//Registration.jsx
 import React, { useState } from "react";
 import InputFieldReg from "../Components/InputFieldReg";
 import Button from "../Components/Button";

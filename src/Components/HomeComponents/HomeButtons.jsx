@@ -1,3 +1,4 @@
+//HomeButtons.jsx
 import React from 'react'
 
 const HomeButtons = ({title}) => {

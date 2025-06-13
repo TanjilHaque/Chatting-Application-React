@@ -1,3 +1,4 @@
+//grouplist.validation.js
 export const validationGroup = (groupInfo, setGroupError) => {
     if (!groupInfo || !setGroupError) {
         throw new Error(`Missing  groupInfo & setGroupError`)

@@ -1,3 +1,4 @@
+//Friend.jsx
 import React, { useEffect, useState } from "react";
 import { getDatabase, onValue, ref, remove } from "firebase/database";
 import { set, ref as dbRef } from "firebase/database"; // Add to imports
